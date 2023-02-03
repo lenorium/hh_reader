@@ -1,0 +1,37 @@
+version: '3.9'
+
+services:
+  api:
+    build: client_api/
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    env_file:
+#      - .env
+      - .env-shared
+  searcher:
+    build: searcher/
+    depends_on:
+      - db
+    env_file:
+#      - .env
+      - .env-shared
+  db:
+    image: postgres:latest
+    restart: on-failure
+    ports:
+      - "5432:5432"
+    volumes:
+#      - ./data/db:/var/lib/postgresql/data
+      - ./sql_scripts:/docker-entrypoint-initdb.d
+    env_file:
+#      - .env
+      - .env-shared
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    ports:
+      - "8001:80"
+    env_file:
+#      - .env
+      - .env-shared
