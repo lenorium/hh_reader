@@ -1,11 +1,11 @@
 import os
-from datetime import datetime
+from datetime import datetime, timedelta, date
 
 from dotenv import load_dotenv
 
 load_dotenv('../.env' if os.path.exists('../.env') else '../.env-shared')
 
-RUN_BY_SCHEDULE = os.getenv('RUN_BY_SCHEDULE', False) == 'True'
+RUN_BY_SCHEDULE = os.getenv('RUN_BY_SCHEDULE', True) == 'True'
 
 SEARCH_EVERY_N_DAYS = int(os.getenv('SEARCH_EVERY_N_DAYS', default=1))
 SEARCH_RUN_AT = os.getenv('SEARCH_RUN_AT', '10:00')
@@ -27,6 +27,12 @@ SEARCH_FIELD = os.getenv('SEARCH_FIELD')
 SEARCH_AREA = int(os.getenv('SEARCH_AREA', default=113))  # Если не задано значение, то ищем по всей России (id = 113)
 SEARCH_PER_PAGE = int(os.getenv('SEARCH_PER_PAGE', default=10))
 SEARCH_ORDER_BY = os.getenv('SEARCH_ORDER_BY')
-SEARCH_DATE_TO = os.getenv('SEARCH_DATE_TO')
-SEARCH_DATE_TO = datetime.strptime(SEARCH_DATE_TO, '%Y-%m-%d %H:%M:%S') if SEARCH_DATE_TO else datetime.now()
+
+__search_date_to = os.getenv('SEARCH_DATE_TO')
+__search_date_to = datetime.strptime(__search_date_to, '%Y-%m-%d') if __search_date_to else date.today()
+SEARCH_DATE_TO = datetime.combine(__search_date_to, datetime.max.time())
+
+__search_date_from = SEARCH_DATE_TO - timedelta(days=SEARCH_EVERY_N_DAYS)
+SEARCH_DATE_FROM = datetime.combine(__search_date_from, datetime.min.time())
+
 

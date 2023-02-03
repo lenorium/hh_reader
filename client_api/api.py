@@ -23,8 +23,8 @@ def home():
 
 @app.get('/skills')
 def skills(session: Session = Depends(get_session),
-           date_from: date = datetime.now() - timedelta(days=1),
-           date_to: date = datetime.now()):
+           date_from: date = date.today() - timedelta(days=1),
+           date_to: date = date.today()):
     date_from = datetime.combine(date_from, datetime.min.time())
     date_to = datetime.combine(date_to, datetime.max.time())
     return crud.rate_skills(session, date_from, date_to)

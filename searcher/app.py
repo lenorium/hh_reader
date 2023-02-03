@@ -47,9 +47,6 @@ def job_collect_data(date_from: datetime, date_to: datetime):
 
 
 if __name__ == '__main__':
-    date_to = settings.SEARCH_DATE_TO
-    date_from = date_to - timedelta(days=settings.SEARCH_EVERY_N_DAYS)
-
     if settings.RUN_BY_SCHEDULE:
 
         logger.info(f'Поиск вакансий по расписанию в {settings.SEARCH_RUN_AT} '
@@ -59,11 +56,13 @@ if __name__ == '__main__':
             .days\
             .at(settings.SEARCH_RUN_AT)\
             .do(job_collect_data,
-                date_from=date_from,
-                date_to=date_to)
+                date_from=settings.SEARCH_DATE_FROM,
+                date_to=settings.SEARCH_DATE_TO)
 
+        # первый раз запускается сразу, далее по расписанию
+        job_collect_data(settings.SEARCH_DATE_FROM, settings.SEARCH_DATE_TO)
         while True:
             schedule.run_pending()
             time.sleep(1)
     else:
-        job_collect_data(date_from, date_to)
+        job_collect_data(settings.SEARCH_DATE_FROM, settings.SEARCH_DATE_TO)
