@@ -77,6 +77,7 @@
 
 ## Используемый стек
 - Python 3.10 (SQLAlchemy, FastAPI)
+- SQL
 - PostgresQL
 - Docker
 - PGAdmin
