@@ -1,11 +1,10 @@
 import logging
 import sys
 
-from config import settings
+import config as settings
 
 
 class CustomFormatter(logging.Formatter):
-
     grey = '\x1b[38;21m'
     blue = '\x1b[38;5;39m'
     yellow = '\x1b[38;5;226m'
@@ -30,10 +29,9 @@ class CustomFormatter(logging.Formatter):
         return formatter.format(record)
 
 
-logger = logging.getLogger(__name__)
-logger.setLevel(settings.log_level.upper())
+logger = logging.getLogger('bot')
+logger.setLevel(settings.LOG_LEVEL.upper())
 
 handler = logging.StreamHandler(stream=sys.stdout)
 handler.setFormatter(CustomFormatter(fmt='[%(asctime)s: %(levelname)s] %(message)s'))
 logger.addHandler(handler)
-

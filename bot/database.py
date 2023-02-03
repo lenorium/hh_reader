@@ -3,23 +3,22 @@ from sqlalchemy.engine import URL
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import sessionmaker
 
-from config import settings
+import config as settings
 
-if settings.db_url:
-    connect_url = settings.db_url
+if settings.DB_URL:
+    connect_url = settings.DB_URL
 else:
     connect_url = {
         'drivername': 'postgresql+psycopg2',
-        'host': settings.db_host,
-        'port': settings.db_port,
-        'username': settings.db_user,
-        'password': settings.db_password,
-        'database': settings.db_name
+        'host': settings.DB_HOST,
+        'port': settings.DB_PORT,
+        'username': settings.DB_USER,
+        'password': settings.DB_PASSWORD,
+        'database': settings.DB_NAME
     }
     connect_url = URL(**connect_url)
 
-echo = settings.log_level == 'debug'
 Base = automap_base()
-engine = create_engine(connect_url, echo=echo)
+engine = create_engine(connect_url, echo=settings.DB_LOG)
 session_maker = sessionmaker(bind=engine)
 Base.prepare(autoload_with=engine)

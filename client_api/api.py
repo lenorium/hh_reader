@@ -4,8 +4,8 @@ import uvicorn
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 
+import config as settings
 import crud
-from config import settings
 from database import session_maker
 
 app = FastAPI()
@@ -35,4 +35,4 @@ def get_date_from(time_delta: int, date_to: datetime) -> datetime:
 
 
 if __name__ == '__main__':
-    uvicorn.run("api:app", host='0.0.0.0', port=settings.api_port, log_level=settings.log_level.lower(), reload=True)
+    uvicorn.run("api:app", host='0.0.0.0', port=settings.API_PORT, log_level=settings.LOG_LEVEL.lower(), reload=True)

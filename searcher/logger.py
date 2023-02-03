@@ -1,7 +1,7 @@
 import logging
 import sys
 
-from config import settings
+import config as settings
 
 
 class CustomFormatter(logging.Formatter):
@@ -30,8 +30,8 @@ class CustomFormatter(logging.Formatter):
         return formatter.format(record)
 
 
-logger = logging.getLogger(__name__)
-logger.setLevel(settings.log_level.upper())
+logger = logging.getLogger('searcher')
+logger.setLevel(settings.LOG_LEVEL.upper())
 
 handler = logging.StreamHandler(stream=sys.stdout)
 handler.setFormatter(CustomFormatter(fmt='[%(asctime)s: %(levelname)s] %(message)s'))

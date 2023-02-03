@@ -1,5 +1,8 @@
 from db.database import session_maker
 
+from models import Vacancy
+from sqlalchemy import func
+
 
 def filter_if_exists(external_ids: list[int]) -> list[int]:
     with session_maker() as session:

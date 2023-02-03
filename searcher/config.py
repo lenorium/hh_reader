@@ -1,61 +1,32 @@
 import os
 from datetime import datetime
 
-from pydantic import BaseSettings, Field, validator
+from dotenv import load_dotenv
+
+load_dotenv('../.env' if os.path.exists('../.env') else '../.env-shared')
+
+RUN_BY_SCHEDULE = os.getenv('RUN_BY_SCHEDULE', False) == 'True'
+
+SEARCH_EVERY_N_DAYS = int(os.getenv('SEARCH_EVERY_N_DAYS', default=1))
+SEARCH_RUN_AT = os.getenv('SEARCH_RUN_AT', '10:00')
+
+LOG_LEVEL = os.getenv('LOG_LEVEL', default='INFO').upper()
+
+DB_URL = os.getenv('DATABASE_URL')
+DB_HOST = os.getenv('POSTGRES_HOST')
+DB_PORT = os.getenv('POSTGRES_PORT')
+DB_NAME = os.getenv('POSTGRES_DB')
+DB_USER = os.getenv('POSTGRES_USER')
+DB_PASSWORD = os.getenv('POSTGRES_PASSWORD')
+DB_LOG = LOG_LEVEL == 'DEBUG'
 
 
-class __Settings(BaseSettings):
-    db_url: str = Field(env='DATABASE_URL')
-    db_host: str = Field(env='POSTGRES_HOST')
-    db_port: str = Field(env='POSTGRES_PORT')
-    db_name: str = Field(env='POSTGRES_DB')
-    db_user: str = Field(env='POSTGRES_USER')
-    db_password: str = Field(env='POSTGRES_PASSWORD')
-    api_port: int = Field(env='API_PORT')
-    log_level: str = Field(env='LOG_LEVEL')
+SEARCH_URL = os.getenv('SEARCH_URL')
+SEARCH_TEXT = os.getenv('SEARCH_TEXT')
+SEARCH_FIELD = os.getenv('SEARCH_FIELD')
+SEARCH_AREA = int(os.getenv('SEARCH_AREA', default=113))  # Если не задано значение, то ищем по всей России (id = 113)
+SEARCH_PER_PAGE = int(os.getenv('SEARCH_PER_PAGE', default=10))
+SEARCH_ORDER_BY = os.getenv('SEARCH_ORDER_BY')
+SEARCH_DATE_TO = os.getenv('SEARCH_DATE_TO')
+SEARCH_DATE_TO = datetime.strptime(SEARCH_DATE_TO, '%Y-%m-%d %H:%M:%S') if SEARCH_DATE_TO else datetime.now()
 
-    search_url: str = Field(env='SEARCH_URL')
-    search_text: str = Field(env='SEARCH_TEXT')
-    search_field: str = Field(env='SEARCH_FIELD')
-    search_area: int = Field(env='SEARCH_AREA')
-    search_per_page: int = Field(env='SEARCH_PER_PAGE')
-    search_order_by: str = Field(env='SEARCH_ORDER_BY')
-    search_date_to: datetime = Field(env='SEARCH_DATE_TO')
-
-    run_by_schedule: bool = Field(env='RUN_BY_SCHEDULE')
-    search_every_n_days: int = Field(env='SEARCH_EVERY_N_DAYS')
-    search_run_at: str = Field(env='SEARCH_RUN_AT')
-
-    class Config:
-        validate_assignment = True
-
-    @validator('log_level')
-    def set_log_level(cls, log_level):
-        return log_level or 'info'
-
-    @validator('search_area')
-    def set_search_area(cls, search_area):
-        return search_area or 113 # Если не задано значение, то ищем по всей России (id = 113)
-
-    @validator('search_per_page')
-    def set_search_per_page(cls, search_per_page):
-        return search_per_page or 10
-
-    @validator('search_date_to')
-    def set_search_date_to(cls, search_date_to):
-        return search_date_to or datetime.now()
-
-    @validator('run_by_schedule')
-    def set_run_by_schedule(cls, run_by_schedule):
-        return run_by_schedule or False
-
-    @validator('search_every_n_days')
-    def set_search_every_n_days(cls, search_every_n_days):
-        return search_every_n_days or 1
-
-    @validator('search_run_at')
-    def set_search_run_at(cls, search_run_at):
-        return search_run_at or '10:00'
-
-
-settings = __Settings(_env_file='../.env' if os.path.exists('../.env') else '../.env-shared')

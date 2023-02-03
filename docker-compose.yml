@@ -20,7 +20,7 @@ services:
   bot:
     build: searcher/
     depends_on:
-      - searcher
+      - db
     env_file:
 #      - .env
       - .env-shared
@@ -28,7 +28,7 @@ services:
     image: postgres:latest
     restart: on-failure
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
     volumes:
 #      - ./data/db:/var/lib/postgresql/data
       - ./sql_scripts:/docker-entrypoint-initdb.d
@@ -38,7 +38,7 @@ services:
   pgadmin:
     image: dpage/pgadmin4:latest
     ports:
-      - "8001:80"
+      - "${PGADMIN_PORT}:80"
     env_file:
 #      - .env
       - .env-shared

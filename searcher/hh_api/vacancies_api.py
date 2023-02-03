@@ -1,11 +1,11 @@
 from hh_api import api_methods as api
 from models import Vacancy, VacancySearchResult
 
-from config import settings
+import config as settings
 
 
 def get_vacancies(**params) -> list:
-    response = api.get(settings.search_url + '/vacancies', 200, **params)
+    response = api.get(settings.SEARCH_URL + '/vacancies', 200, **params)
     result = VacancySearchResult(response)
     vacancies = []
     for item in result.items:
@@ -14,6 +14,6 @@ def get_vacancies(**params) -> list:
 
 
 def get_vacancy_details(_id: int) -> Vacancy:
-    response = api.get(settings.search_url + '/vacancies/' + str(_id))
+    response = api.get(settings.SEARCH_URL + '/vacancies/' + str(_id))
     return Vacancy(response)
 

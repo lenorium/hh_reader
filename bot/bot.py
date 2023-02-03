@@ -3,10 +3,10 @@ from datetime import timedelta, datetime
 
 import schedule
 
-import telegram_bot
+import config as settings
 import crud
+import telegram_bot
 from logger import logger
-from config import settings
 
 
 def create_msg_text(skills: dict, date_from: datetime, date_to: datetime) -> str:
@@ -27,18 +27,21 @@ def job_send_rating(date_from, date_to):
 
 
 if __name__ == '__main__':
-    if settings.use_telegram:
-        date_to = settings.search_date_to
-        date_from = date_to - timedelta(days=settings.send_msg_n_days)
+    if settings.USE_TELEGRAM:
+        date_to = datetime.now()
+        date_from = date_to - timedelta(days=settings.SEND_MSG_EVERY_N_DAYS)
 
-        if settings.run_by_schedule:
+        date_from = datetime.combine(date_from, datetime.min.time())
+        date_to = datetime.combine(date_to, datetime.max.time())
 
-            logger.info(f'Формирование списка навыков по расписанию в {settings.send_msg_at} '
-                        f'каждые {settings.send_msg_n_days} дня(дней)')
+        if settings.RUN_BY_SCHEDULE:
 
-            schedule.every(settings.send_msg_at)\
+            logger.info(f'Формирование списка навыков по расписанию в {settings.SEND_MSG_AT} '
+                        f'каждые {settings.SEND_MSG_EVERY_N_DAYS} дня(дней)')
+
+            schedule.every(settings.SEND_MSG_EVERY_N_DAYS) \
                 .days\
-                .at(settings.send_msg_n_days)\
+                .at(settings.SEND_MSG_AT)\
                 .do(job_send_rating,
                     date_from=date_from,
                     date_to=date_to)

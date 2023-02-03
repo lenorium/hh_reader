@@ -3,10 +3,10 @@ from datetime import timedelta, datetime
 
 import schedule
 
-from config import settings
+from logger import logger
 from db import crud as db
 from hh_api import vacancies_api
-from logger import logger
+import config as settings
 
 
 def job_collect_data(date_from: datetime, date_to: datetime):
@@ -15,15 +15,15 @@ def job_collect_data(date_from: datetime, date_to: datetime):
     while True:
         logger.info(
             f'1. Получаем список вакансий: страница {page} на каждой странице '
-            f'{settings.search_per_page}\n записей')
-        vacancies = vacancies_api.get_vacancies(text=settings.search_text,
-                                                search_field=settings.search_field,
+            f'{settings.SEARCH_PER_PAGE}\n записей')
+        vacancies = vacancies_api.get_vacancies(text=settings.SEARCH_TEXT,
+                                                search_field=settings.SEARCH_FIELD,
                                                 date_from=date_from.isoformat(),
                                                 date_to=date_to.isoformat(),
-                                                area=settings.search_area,  # Россия
-                                                per_page=settings.search_per_page,
+                                                area=settings.SEARCH_AREA,  # Россия
+                                                per_page=settings.SEARCH_PER_PAGE,
                                                 page=page,
-                                                order_by=settings.search_order_by)
+                                                order_by=settings.SEARCH_ORDER_BY)
         if not vacancies:
             logger.info(f'2. Новых вакансий за выбранный период {date_from} - {date_to} нет\n')
             break
@@ -47,17 +47,17 @@ def job_collect_data(date_from: datetime, date_to: datetime):
 
 
 if __name__ == '__main__':
-    date_to = settings.search_date_to
-    date_from = date_to - timedelta(days=settings.search_every_n_days)
+    date_to = settings.SEARCH_DATE_TO
+    date_from = date_to - timedelta(days=settings.SEARCH_EVERY_N_DAYS)
 
-    if settings.run_by_schedule:
+    if settings.RUN_BY_SCHEDULE:
 
-        logger.info(f'Поиск вакансий по расписанию в {settings.search_run_at} '
-                    f'каждые {settings.search_every_n_days} дня(дней)')
+        logger.info(f'Поиск вакансий по расписанию в {settings.SEARCH_RUN_AT} '
+                    f'каждые {settings.SEARCH_EVERY_N_DAYS} дня(дней)')
 
-        schedule.every(settings.search_every_n_days)\
+        schedule.every(settings.SEARCH_EVERY_N_DAYS) \
             .days\
-            .at(settings.search_run_at)\
+            .at(settings.SEARCH_RUN_AT)\
             .do(job_collect_data,
                 date_from=date_from,
                 date_to=date_to)
