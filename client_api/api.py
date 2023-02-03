@@ -30,9 +30,5 @@ def skills(session: Session = Depends(get_session),
     return crud.rate_skills(session, date_from, date_to)
 
 
-def get_date_from(time_delta: int, date_to: datetime) -> datetime:
-    return date_to - timedelta(days=time_delta)
-
-
 if __name__ == '__main__':
     uvicorn.run("api:app", host='0.0.0.0', port=settings.API_PORT, log_level=settings.LOG_LEVEL.lower(), reload=True)
