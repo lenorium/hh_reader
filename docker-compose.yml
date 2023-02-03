@@ -17,13 +17,6 @@ services:
     env_file:
 #      - .env
       - .env-shared
-  bot:
-    build: searcher/
-    depends_on:
-      - db
-    env_file:
-#      - .env
-      - .env-shared
   db:
     image: postgres:latest
     restart: on-failure

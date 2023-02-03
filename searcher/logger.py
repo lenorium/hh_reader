@@ -30,7 +30,7 @@ class CustomFormatter(logging.Formatter):
         return formatter.format(record)
 
 
-logger = logging.getLogger('searcher')
+logger = logging.getLogger(__name__)
 logger.setLevel(settings.LOG_LEVEL.upper())
 
 handler = logging.StreamHandler(stream=sys.stdout)
