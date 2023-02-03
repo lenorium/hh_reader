@@ -14,4 +14,4 @@ DB_USER = os.getenv('POSTGRES_USER')
 DB_PASSWORD = os.getenv('POSTGRES_PASSWORD')
 DB_LOG = LOG_LEVEL == 'DEBUG'
 
-API_PORT = int(os.getenv('API_PORT'))
+API_PORT = int(os.getenv('PORT'))
