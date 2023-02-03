@@ -1,6 +1,4 @@
-from db.db_connect import session_maker
-from models import Vacancy
-from sqlalchemy.sql.expression import func
+from db.database import session_maker
 
 
 def filter_if_exists(external_ids: list[int]) -> list[int]:

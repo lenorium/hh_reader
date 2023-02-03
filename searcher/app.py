@@ -62,16 +62,8 @@ if __name__ == '__main__':
                 date_from=date_from,
                 date_to=date_to)
 
-        # logger.info(f'Формирование списка навыков по расписанию в {config.SEND_MSG_AT} '
-        #             f'каждые {config.SEND_MSG_EVERY_N_DAYS} дня(дней)')
-        #
-        # schedule.every(config.SEND_MSG_AT).days.at(config.SEND_MSG_AT).do(job_send_rating)
-
-        schedule.run_all()
-
         while True:
             schedule.run_pending()
             time.sleep(1)
     else:
         job_collect_data(date_from, date_to)
-        # job_send_rating()
