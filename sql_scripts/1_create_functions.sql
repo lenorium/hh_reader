@@ -10,19 +10,19 @@ AS $$
     BEGIN
         INSERT INTO vacancies (external_id, vacancy_name, published_at)
         VALUES (ext_id, vacancy_name, published_at)
-            ON conflict(external_id) DO nothing
+            ON conflict(external_id) DO update
                RETURNING vacancy_id INTO current_id;
 
         INSERT INTO skills (skill_name)
         SELECT *
           FROM unnest(skill_names)
-            ON conflict DO nothing;
+            ON conflict DO update;
 
         INSERT INTO vacancy_skill (vacancy_id, skill_id)
         SELECT current_id, s.skill_id
           FROM skills s
          WHERE s.skill_name = any(skill_names)
-            ON conflict DO nothing;
+            ON conflict DO update;
     END
 $$ LANGUAGE PLPGSQL;
 

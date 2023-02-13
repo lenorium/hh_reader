@@ -30,19 +30,19 @@ def job_collect_data(date_from: datetime, date_to: datetime):
 
         page += 1
 
-        logger.info('2. Проверяем полученный список вакансий на наличие в БД.\n'
-                    'Если такая уже есть, то пропускаем (не обновляем).')
+        # logger.info('2. Проверяем полученный список вакансий на наличие в БД.\n'
+        #             'Если такая уже есть, то пропускаем (не обновляем).')
         external_ids = [v.external_id for v in vacancies]
-        external_ids = db.filter_if_exists(external_ids)
+        # external_ids = db.filter_if_exists(external_ids)
 
-        logger.info('3. Запрашиваем каждую вакансию для получения списка навыков\n')
+        logger.info('2. Запрашиваем каждую вакансию для получения списка навыков\n')
         vacancies_full = [vacancies_api.get_vacancy_details(_id) for _id in external_ids]
 
         # выбираем только те навыки, которые написаны на англ, чтоб не попадали всякие типа "Ответственность"
         for v in vacancies_full:
             v.skills = [s.lower() for s in v.skills if s.isascii()]
 
-        logger.info('4. Сохраняем вакансии с навыками в базу данных\n')
+        logger.info('3. Сохраняем вакансии с навыками в базу данных\n')
         db.save_vacancies_full(vacancies_full)
 
 
